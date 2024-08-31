@@ -1,12 +1,13 @@
 package com.backend_project.Shopping_backend_application.service.product;
 
 import com.backend_project.Shopping_backend_application.model.Product;
+import com.backend_project.Shopping_backend_application.request.AddProductRequest;
 
 import java.util.List;
 
 public interface IProductService {
 
-    Product addProduct(Product product);
+    Product addProduct(AddProductRequest product);
     Product getProductById(Long id);
     void deleteProductById(Long id);
     void updateProduct(Product product, Long productId);
