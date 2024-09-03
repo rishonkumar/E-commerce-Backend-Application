@@ -6,6 +6,7 @@ import com.backend_project.Shopping_backend_application.model.Product;
 import com.backend_project.Shopping_backend_application.repository.CategoryRepository;
 import com.backend_project.Shopping_backend_application.repository.ProductRepository;
 import com.backend_project.Shopping_backend_application.request.AddProductRequest;
+import com.backend_project.Shopping_backend_application.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -61,8 +62,30 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void updateProduct(Product product, Long productId) {
+    public Product updateProduct(ProductUpdateRequest request, Long productId) {
 
+        Product product = productRepository.findById(productId)
+                .map(existingProduct -> updateExisitngProduct(existingProduct,request))
+                .map(productRepository::save)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+        return product;
+
+    }
+
+    private Product updateExisitngProduct(Product exisitingProduct, ProductUpdateRequest productUpdateRequest) {
+        exisitingProduct.setName(productUpdateRequest.getName());
+        exisitingProduct.setBrand(productUpdateRequest.getBrand());
+        exisitingProduct.setPrice(productUpdateRequest.getPrice());
+        exisitingProduct.setInventory(productUpdateRequest.getInventory());
+        exisitingProduct.setDescription(productUpdateRequest.getDescription());
+
+
+        Category category = categoryRepository.findByName( productUpdateRequest.getCategory().getName());
+        if(category != null) {
+            exisitingProduct.setCategory(category);
+        }
+        return exisitingProduct;
     }
 
     @Override
