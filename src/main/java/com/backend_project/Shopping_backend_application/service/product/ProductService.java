@@ -1,6 +1,7 @@
 package com.backend_project.Shopping_backend_application.service.product;
 
 import com.backend_project.Shopping_backend_application.exceptions.ProductNotFoundException;
+import com.backend_project.Shopping_backend_application.exceptions.ResourceNotFoundException;
 import com.backend_project.Shopping_backend_application.model.Category;
 import com.backend_project.Shopping_backend_application.model.Product;
 import com.backend_project.Shopping_backend_application.repository.CategoryRepository;
@@ -50,13 +51,13 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
     @Override
     public void deleteProductById(Long id) {
         productRepository.findById(id).ifPresentOrElse(productRepository::delete, () -> {
-            throw new ProductNotFoundException("Product not found");
+            throw new ResourceNotFoundException("Product not found");
         });
 
     }
