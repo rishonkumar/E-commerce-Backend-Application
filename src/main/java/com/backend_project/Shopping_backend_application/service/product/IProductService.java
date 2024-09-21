@@ -1,5 +1,6 @@
 package com.backend_project.Shopping_backend_application.service.product;
 
+import com.backend_project.Shopping_backend_application.dto.ProductDto;
 import com.backend_project.Shopping_backend_application.model.Product;
 import com.backend_project.Shopping_backend_application.request.AddProductRequest;
 import com.backend_project.Shopping_backend_application.request.ProductUpdateRequest;
@@ -20,4 +21,7 @@ public interface IProductService {
     List<Product>getProductsByBrandAndName(String brand, String name);
     Long countProductsByBrandAndName(String brand, String name);
 
+    List<ProductDto> getConvertedProduct(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }

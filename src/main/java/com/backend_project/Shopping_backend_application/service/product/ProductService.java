@@ -1,14 +1,19 @@
 package com.backend_project.Shopping_backend_application.service.product;
 
+import com.backend_project.Shopping_backend_application.dto.ImageDto;
+import com.backend_project.Shopping_backend_application.dto.ProductDto;
 import com.backend_project.Shopping_backend_application.exceptions.ProductNotFoundException;
 import com.backend_project.Shopping_backend_application.exceptions.ResourceNotFoundException;
 import com.backend_project.Shopping_backend_application.model.Category;
+import com.backend_project.Shopping_backend_application.model.Image;
 import com.backend_project.Shopping_backend_application.model.Product;
 import com.backend_project.Shopping_backend_application.repository.CategoryRepository;
+import com.backend_project.Shopping_backend_application.repository.ImageRepository;
 import com.backend_project.Shopping_backend_application.repository.ProductRepository;
 import com.backend_project.Shopping_backend_application.request.AddProductRequest;
 import com.backend_project.Shopping_backend_application.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +26,9 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
 
     private final CategoryRepository categoryRepository;
+
+    private final ModelMapper modelMapper;
+    private final ImageRepository imageRepository;
 
 
     @Override
@@ -122,5 +130,22 @@ public class ProductService implements IProductService {
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    @Override
+    public List<ProductDto> getConvertedProduct(List<Product>products) {
+        return products.stream().map(this::convertToDto).toList();
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product) {
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto>imageDtos = images.stream().map(image -> modelMapper.map(image, ImageDto.class))
+                .toList();
+
+        productDto.setImages(imageDtos);
+        return productDto;
+
     }
 }
