@@ -32,7 +32,7 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private void setTotalPrice() {
+    public void setTotalPrice() {
         this.totalPrice = this.unitPrice.multiply(new BigDecimal(quantity));
     }
 }
